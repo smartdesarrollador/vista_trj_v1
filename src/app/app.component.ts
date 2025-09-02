@@ -6,6 +6,7 @@ import {
   RouterModule,
   RouterOutlet,
 } from '@angular/router';
+import { PwaInstallPromptComponent } from './components/pwa-install-prompt/pwa-install-prompt.component';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import {
     RouterModule,
     RouterLink,
     RouterLinkActive,
+    PwaInstallPromptComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
