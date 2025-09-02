@@ -22,6 +22,11 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   private isHovering = false;
   private rafId: number | null = null;
   
+  // Share functionality properties
+  showShareMenu = false;
+  copyButtonText = 'Copiar enlace';
+  private readonly cardUrl = 'https://tarjeta-jeans.smartdigitaltec.com';
+  
   private subscription: Subscription = new Subscription();
 
   constructor(
@@ -350,6 +355,111 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   onImageLoad(event: any): void {
     // Opcional: añadir efecto de fade in
     event.target.style.opacity = '1';
+  }
+
+  // ==================== SHARE FUNCTIONALITY ====================
+
+  /**
+   * Toggle share menu visibility
+   */
+  toggleShareMenu(): void {
+    this.showShareMenu = !this.showShareMenu;
+  }
+
+  /**
+   * Share to WhatsApp
+   */
+  shareToWhatsApp(): void {
+    const text = encodeURIComponent(`¡Mira mi tarjeta digital! ${this.digitalCard?.personalInfo?.name || ''} - Especializado en desarrollo web moderno`);
+    const url = encodeURIComponent(this.cardUrl);
+    const whatsappUrl = `https://wa.me/?text=${text}%20${url}`;
+    
+    if (isPlatformBrowser(this.platformId)) {
+      window.open(whatsappUrl, '_blank', 'width=600,height=400');
+    }
+    this.showShareMenu = false;
+  }
+
+  /**
+   * Share to Facebook
+   */
+  shareToFacebook(): void {
+    const url = encodeURIComponent(this.cardUrl);
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    
+    if (isPlatformBrowser(this.platformId)) {
+      window.open(facebookUrl, '_blank', 'width=600,height=400');
+    }
+    this.showShareMenu = false;
+  }
+
+  /**
+   * Share to Twitter
+   */
+  shareToTwitter(): void {
+    const text = encodeURIComponent(`¡Mira mi tarjeta digital! ${this.digitalCard?.personalInfo?.name || ''} - Especializado en desarrollo web moderno`);
+    const url = encodeURIComponent(this.cardUrl);
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+    
+    if (isPlatformBrowser(this.platformId)) {
+      window.open(twitterUrl, '_blank', 'width=600,height=400');
+    }
+    this.showShareMenu = false;
+  }
+
+  /**
+   * Share to LinkedIn
+   */
+  shareToLinkedIn(): void {
+    const url = encodeURIComponent(this.cardUrl);
+    const title = encodeURIComponent(`Tarjeta Digital - ${this.digitalCard?.personalInfo?.name || ''}`);
+    const summary = encodeURIComponent('Especializado en desarrollo web moderno. Conecta conmigo a través de mi tarjeta digital interactiva.');
+    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${title}&summary=${summary}`;
+    
+    if (isPlatformBrowser(this.platformId)) {
+      window.open(linkedinUrl, '_blank', 'width=600,height=400');
+    }
+    this.showShareMenu = false;
+  }
+
+  /**
+   * Copy URL to clipboard
+   */
+  async copyToClipboard(): Promise<void> {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(this.cardUrl);
+      } else {
+        // Fallback para navegadores más antiguos
+        const textArea = document.createElement('textarea');
+        textArea.value = this.cardUrl;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        textArea.remove();
+      }
+      
+      // Cambiar texto del botón temporalmente
+      this.copyButtonText = '¡Copiado!';
+      setTimeout(() => {
+        this.copyButtonText = 'Copiar enlace';
+      }, 2000);
+      
+    } catch (err) {
+      console.error('Error copying to clipboard:', err);
+      this.copyButtonText = 'Error al copiar';
+      setTimeout(() => {
+        this.copyButtonText = 'Copiar enlace';
+      }, 2000);
+    }
+    
+    this.showShareMenu = false;
   }
 
 }

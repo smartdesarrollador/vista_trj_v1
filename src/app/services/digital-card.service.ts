@@ -3,35 +3,42 @@ import { Observable, of } from 'rxjs';
 import { DigitalCard } from '../interfaces/digital-card.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DigitalCardService {
-
   // Datos del perfil principal
   private profileData: DigitalCard = {
     personalInfo: {
-      name: "Jeans Enrique Malón Reyna",
-      title: "Desarrollador Full Stack",
-      location: "Lima, Perú",
-      photo: "assets/foto/perfil.png"
+      name: 'Jeans Enrique Malón Reyna',
+      title: 'Desarrollador Full Stack',
+      location: 'Lima, Perú',
+      photo: 'assets/foto/perfil.jpg',
     },
     contact: {
-      email: "sistema5000smart@gmail.com",
-      phone: "+51 955365043",
-      facebook: "https://www.facebook.com/jeansenrique.malonreyna",
-      website: "https://portafolio.smartdigitaltec.com",
-      whatsapp: "+51 955365043"
+      email: 'sistema5000smart@gmail.com',
+      phone: '+51 955365043',
+      facebook: 'https://www.facebook.com/jeansenrique.malonreyna',
+      website: 'https://portafolio.smartdigitaltec.com',
+      whatsapp: '+51 955365043',
     },
     about: {
-      description: "Especializado en desarrollo web moderno con Angular, React, Laravel y diseño centrado en el usuario.",
-      skills: ["Angular", "React", "Laravel", "JavaScript", "TypeScript", "PHP"],
-      experience: 5
-    }
+      description:
+        'Especializado en desarrollo web moderno con Angular, React, Laravel y diseño centrado en el usuario.',
+      skills: [
+        'Angular',
+        'React',
+        'Laravel',
+        'JavaScript',
+        'TypeScript',
+        'PHP',
+      ],
+      experience: 10,
+    },
   };
 
   private currentProfileIndex = 0;
 
-  constructor() { }
+  constructor() {}
 
   /**
    * Obtener datos de la tarjeta digital
@@ -62,27 +69,29 @@ export class DigitalCardService {
    */
   validateDigitalCard(data: any): boolean {
     if (!data || typeof data !== 'object') return false;
-    
+
     // Validar personalInfo
-    if (!data.personalInfo || 
-        !data.personalInfo.name || 
-        !data.personalInfo.title || 
-        !data.personalInfo.location) {
+    if (
+      !data.personalInfo ||
+      !data.personalInfo.name ||
+      !data.personalInfo.title ||
+      !data.personalInfo.location
+    ) {
       return false;
     }
 
     // Validar contact
-    if (!data.contact || 
-        !data.contact.email || 
-        !data.contact.phone) {
+    if (!data.contact || !data.contact.email || !data.contact.phone) {
       return false;
     }
 
     // Validar about (opcional)
     if (data.about) {
-      if (!data.about.description || 
-          !Array.isArray(data.about.skills) || 
-          typeof data.about.experience !== 'number') {
+      if (
+        !data.about.description ||
+        !Array.isArray(data.about.skills) ||
+        typeof data.about.experience !== 'number'
+      ) {
         return false;
       }
     }
