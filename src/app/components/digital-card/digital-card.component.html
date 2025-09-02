@@ -116,6 +116,8 @@
         [alt]="digitalCard?.personalInfo?.name"
         class="w-full h-full rounded-full object-cover profile-image"
         loading="lazy"
+        decoding="async"
+        fetchpriority="high"
         (error)="onImageError($event)"
         (load)="onImageLoad($event)"
         style="opacity: 0; transition: opacity 0.3s ease"

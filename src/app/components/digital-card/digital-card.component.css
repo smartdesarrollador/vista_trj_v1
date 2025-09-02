@@ -15,8 +15,9 @@
   cursor: pointer;
   transform-style: preserve-3d;
   perspective: 1200px;
-  animation: holographicEntry 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: holographicEntry 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  will-change: transform, filter;
 }
 
 /* Holographic Border Effect */
@@ -765,8 +766,8 @@
 
 @media (max-width: 768px) {
   .card-container:hover {
-    transform: translateY(-10px) scale(1.02);
-    animation: liquidFloatMobile 2s ease-in-out infinite;
+    transform: translateY(-5px) scale(1.01);
+    animation: none; /* Desactivar animaciones complejas en móvil */
   }
   
   .quantum-particle {
@@ -774,7 +775,18 @@
   }
   
   .magnetic-field {
-    opacity: 0.5;
+    display: none; /* Ocultar completamente en móvil */
+  }
+  
+  /* Simplificar animaciones en móvil */
+  .profile-image:hover {
+    transform: scale(1.1);
+    animation: none;
+  }
+  
+  .contact-link:hover {
+    transform: translateX(5px);
+    animation: none;
   }
 }
 

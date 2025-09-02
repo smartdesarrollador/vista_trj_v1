@@ -3,6 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { DigitalCard } from '../../interfaces/digital-card.interface';
 import { DigitalCardService } from '../../services/digital-card.service';
+import { PerformanceService } from '../../core/performance/performance.service';
 
 @Component({
   selector: 'app-digital-card',
@@ -33,15 +34,25 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
     private digitalCardService: DigitalCardService,
     private elementRef: ElementRef,
     private renderer: Renderer2,
+    private performanceService: PerformanceService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
     this.loadDigitalCard();
     
-    // Solo inicializar efectos cuánticos en el navegador
+    // Solo inicializar efectos cuánticos en el navegador con delay para mejorar performance
     if (isPlatformBrowser(this.platformId)) {
-      this.initializeQuantumEffects();
+      // Verificar si se deben reducir las animaciones por performance
+      if (this.performanceService.shouldUseReducedAnimations()) {
+        // En móvil o con preferencia de movimiento reducido, no inicializar efectos pesados
+        return;
+      }
+      
+      // Delay la inicialización de efectos para priorizar la carga de contenido
+      setTimeout(() => {
+        this.initializeQuantumEffects();
+      }, 200);
     }
   }
 
@@ -96,29 +107,31 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   private createMagneticParticles(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     
+    // Reducir número de partículas para mejor performance
     setTimeout(() => {
       const magneticField = this.elementRef.nativeElement.querySelector('.magnetic-field');
       if (magneticField) {
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 4; i++) { // Reducido de 8 a 4 partículas
           const particle = this.renderer.createElement('div');
           this.renderer.addClass(particle, 'magnetic-particle');
           
-          const colors = ['#00ffff', '#ff0080', '#8000ff', '#00ff80', '#ff8000'];
+          const colors = ['#00ffff', '#ff0080', '#8000ff', '#00ff80'];
           const color = colors[i % colors.length];
-          const size = Math.random() * 4 + 2;
+          const size = Math.random() * 3 + 2; // Tamaño ligeramente menor
           
           this.renderer.setStyle(particle, 'width', `${size}px`);
           this.renderer.setStyle(particle, 'height', `${size}px`);
           this.renderer.setStyle(particle, 'background', color);
-          this.renderer.setStyle(particle, 'box-shadow', `0 0 ${size * 4}px ${color}`);
+          this.renderer.setStyle(particle, 'box-shadow', `0 0 ${size * 3}px ${color}`); // Menos blur
           this.renderer.setStyle(particle, 'top', `${Math.random() * 80 + 10}%`);
           this.renderer.setStyle(particle, 'left', `${Math.random() * 80 + 10}%`);
-          this.renderer.setStyle(particle, 'animation', `magneticField ${6 + Math.random() * 6}s ease-in-out infinite ${Math.random() * 3}s`);
+          this.renderer.setStyle(particle, 'animation', `magneticField ${8 + Math.random() * 4}s ease-in-out infinite ${Math.random() * 2}s`);
+          this.renderer.setStyle(particle, 'will-change', 'transform'); // Optimización GPU
           
           this.renderer.appendChild(magneticField, particle);
         }
       }
-    }, 500);
+    }, 300); // Reducido delay
   }
 
   /**

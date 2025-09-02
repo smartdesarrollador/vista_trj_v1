@@ -1,9 +1,4 @@
 import { Routes } from '@angular/router';
-import { InicioComponent } from './paginas/vista/inicio/inicio.component';
-import { VistaComponent } from './paginas/vista/vista.component';
-import { PageNotFoundComponent } from './paginas/page-not-found/page-not-found.component';
-import { AboutComponent } from './paginas/vista/about/about.component';
-import { CuentaComponent } from './paginas/vista/cuenta/cuenta.component';
 import { authGuard } from './core/auth/guards/auth.guard';
 export const routes: Routes = [
   {
@@ -56,24 +51,41 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: VistaComponent,
+    loadComponent: () =>
+      import('./paginas/vista/vista.component').then((m) => m.VistaComponent),
     children: [
       {
         path: '',
-        component: InicioComponent,
+        loadComponent: () =>
+          import('./paginas/vista/inicio/inicio.component').then(
+            (m) => m.InicioComponent
+          ),
+        title: 'Tarjeta Digital - Inicio',
       },
       {
         path: 'about',
-        component: AboutComponent,
+        loadComponent: () =>
+          import('./paginas/vista/about/about.component').then(
+            (m) => m.AboutComponent
+          ),
+        title: 'Acerca de - Tarjeta Digital',
       },
       {
         path: 'cuenta',
         canActivate: [authGuard],
-        component: CuentaComponent,
+        loadComponent: () =>
+          import('./paginas/vista/cuenta/cuenta.component').then(
+            (m) => m.CuentaComponent
+          ),
+        title: 'Mi Cuenta - Tarjeta Digital',
       },
       {
         path: '**',
-        component: PageNotFoundComponent,
+        loadComponent: () =>
+          import('./paginas/page-not-found/page-not-found.component').then(
+            (m) => m.PageNotFoundComponent
+          ),
+        title: 'Página no encontrada',
       },
     ],
   },
