@@ -33,7 +33,12 @@
               "src/assets",
               "src/manifest.json",
               "src/sw.js",
-              "src/offline.html"
+              "src/offline.html",
+              {
+                "glob": "**/*.vcf",
+                "input": "src/assets/qr",
+                "output": "/assets/qr/"
+              }
             ],
             "styles": [
               "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css",

@@ -4,11 +4,12 @@ import { Subscription } from 'rxjs';
 import { DigitalCard } from '../../interfaces/digital-card.interface';
 import { DigitalCardService } from '../../services/digital-card.service';
 import { PerformanceService } from '../../core/performance/performance.service';
+import { DynamicQrComponent } from '../dynamic-qr/dynamic-qr.component';
 
 @Component({
   selector: 'app-digital-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DynamicQrComponent],
   templateUrl: './digital-card.component.html',
   styleUrl: './digital-card.component.css'
 })
