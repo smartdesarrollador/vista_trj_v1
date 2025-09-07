@@ -73,8 +73,11 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
 
     const cardSubscription = this.digitalCardService.getDigitalCardData().subscribe({
       next: (data) => {
-        if (this.digitalCardService.validateDigitalCard(data)) {
+        if (data && this.digitalCardService.validateDigitalCard(data)) {
           this.digitalCard = data;
+          this.isLoading = false;
+        } else if (data === null) {
+          this.error = 'No se encontró tarjeta digital. Crea una nueva tarjeta para empezar.';
           this.isLoading = false;
         } else {
           this.error = 'Datos de tarjeta digital inválidos';
@@ -325,7 +328,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   /**
    * Formatear número de teléfono para mejor visualización
    */
-  formatPhone(phone?: string): string {
+  formatPhone(phone?: string | null): string {
     if (!phone) return '';
     // Ejemplo: +34 600 123 456 -> +34 600 123 456
     return phone.replace(/(\+\d{2})(\d{3})(\d{3})(\d{3})/, '$1 $2 $3 $4');
@@ -334,7 +337,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   /**
    * Obtener dominio del email para mostrar
    */
-  getEmailDomain(email?: string): string {
+  getEmailDomain(email?: string | null): string {
     if (!email) return '';
     return email.split('@')[1] || '';
   }
@@ -350,7 +353,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   /**
    * Limpiar número de teléfono para WhatsApp
    */
-  getCleanPhone(phone?: string): string {
+  getCleanPhone(phone?: string | null): string {
     if (!phone) return '';
     return phone.replace(/[^0-9]/g, '');
   }
