@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -19,14 +19,17 @@ export class PublicDigitalCardService {
    * Obtener tarjeta digital por slug (acceso público)
    * No requiere autenticación
    */
-  getDigitalCardBySlug(slug: string): Observable<DigitalCard> {
+  getDigitalCardBySlug(slug: string): Observable<DigitalCard | null> {
     return this.http
       .get<DigitalCardResponse>(`${this.baseUrl}/tarjetas/${slug}`)
       .pipe(
-        map((response) => response.data),
+        map((response) => {
+          if (!response || !response.data) return null;
+          return response.data;
+        }),
         catchError((error) => {
           console.error('Error obteniendo tarjeta digital pública:', error);
-          return throwError(() => error);
+          return of(null);
         })
       );
   }
