@@ -114,7 +114,7 @@ export class PublicCardComponent implements OnInit {
     const title = card.personalInfo?.title || '';
     const description = card.about?.description || `Tarjeta digital de ${name}`;
     const pageTitle = title ? `${name} - ${title}` : name;
-    
+
     // Usar una URL relativa para evitar problemas con SSR
     const url = `/tarjeta/${card.slug}`;
 
