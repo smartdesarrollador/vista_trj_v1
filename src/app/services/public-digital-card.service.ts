@@ -2,9 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { 
-  DigitalCard, 
-  DigitalCardResponse
+import {
+  DigitalCard,
+  DigitalCardResponse,
 } from '../interfaces/digital-card.interface';
 import { environment } from '../../environments/environment';
 
@@ -20,13 +20,15 @@ export class PublicDigitalCardService {
    * No requiere autenticación
    */
   getDigitalCardBySlug(slug: string): Observable<DigitalCard> {
-    return this.http.get<DigitalCardResponse>(`${this.baseUrl}/digital-cards/${slug}`).pipe(
-      map(response => response.data),
-      catchError(error => {
-        console.error('Error obteniendo tarjeta digital pública:', error);
-        return throwError(() => error);
-      })
-    );
+    return this.http
+      .get<DigitalCardResponse>(`${this.baseUrl}/tarjetas/${slug}`)
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => {
+          console.error('Error obteniendo tarjeta digital pública:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
   /**
@@ -36,7 +38,12 @@ export class PublicDigitalCardService {
     if (!data || typeof data !== 'object') return false;
 
     // Validar campos obligatorios de la API
-    if (typeof data.id !== 'number' || !data.slug || typeof data.is_active !== 'boolean' || typeof data.is_public !== 'boolean') {
+    if (
+      typeof data.id !== 'number' ||
+      !data.slug ||
+      typeof data.is_active !== 'boolean' ||
+      typeof data.is_public !== 'boolean'
+    ) {
       return false;
     }
 
