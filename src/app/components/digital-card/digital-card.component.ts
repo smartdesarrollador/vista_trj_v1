@@ -17,6 +17,7 @@ import { DigitalCard } from '../../interfaces/digital-card.interface';
 import { DigitalCardService } from '../../services/digital-card.service';
 import { PerformanceService } from '../../core/performance/performance.service';
 import { DynamicQrComponent } from '../dynamic-qr/dynamic-qr.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-digital-card',
@@ -139,6 +140,20 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
 
   get about_info() {
     return this.displayData()?.about_info;
+  }
+
+  get profileImageUrl(): string | null {
+    const photo = this.displayData()?.personal_info?.photo;
+    if (!photo) return null;
+    
+    // Si ya es una URL completa, devolverla tal como está
+    if (photo.startsWith('http://') || photo.startsWith('https://')) {
+      return photo;
+    }
+    
+    // Construir URL completa para imágenes locales usando environment
+    const baseUrl = environment.apiUrl.replace('/api', '');
+    return `${baseUrl}/${photo}`;
   }
 
   private initializeQuantumEffects(): void {
