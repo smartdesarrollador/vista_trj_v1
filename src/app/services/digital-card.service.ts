@@ -169,26 +169,26 @@ export class DigitalCardService {
       return false;
     }
 
-    // Validar personalInfo (puede ser null)
-    if (data.personalInfo !== null) {
-      if (!data.personalInfo || !data.personalInfo.name) {
+    // Validar personal_info (puede ser null)
+    if (data.personal_info !== null) {
+      if (!data.personal_info || !data.personal_info.name) {
         return false;
       }
     }
 
-    // Validar contact (puede ser null)
-    if (data.contact !== null && data.contact) {
-      // Si existe contact, al menos debe tener email o phone
-      if (!data.contact.email && !data.contact.phone) {
+    // Validar contact_info (puede ser null)
+    if (data.contact_info !== null && data.contact_info) {
+      // Si existe contact_info, al menos debe tener email o phone
+      if (!data.contact_info.email && !data.contact_info.phone) {
         return false;
       }
     }
 
-    // Validar about (opcional y puede ser null)
-    if (data.about && data.about !== null) {
+    // Validar about_info (opcional y puede ser null)
+    if (data.about_info && data.about_info !== null) {
       if (
-        !Array.isArray(data.about.skills) ||
-        typeof data.about.experience !== 'number'
+        !Array.isArray(data.about_info.skills) ||
+        typeof data.about_info.experience !== 'number'
       ) {
         return false;
       }
@@ -203,13 +203,13 @@ export class DigitalCardService {
   validateCreateDigitalCardData(data: CreateDigitalCardData): boolean {
     if (!data || typeof data !== 'object') return false;
 
-    // Validar personalInfo obligatorio
-    if (!data.personalInfo || !data.personalInfo.name) {
+    // Validar personal_info obligatorio
+    if (!data.personal_info || !data.personal_info.name) {
       return false;
     }
 
-    // Validar about si existe
-    if (data.about && data.about.skills && !Array.isArray(data.about.skills)) {
+    // Validar about_info si existe
+    if (data.about_info && data.about_info.skills && !Array.isArray(data.about_info.skills)) {
       return false;
     }
 

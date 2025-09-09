@@ -55,8 +55,8 @@ export class PublicDigitalCardService {
       return false;
     }
 
-    // Validar personalInfo (debe existir para mostrar)
-    if (!data.personalInfo || !data.personalInfo.name) {
+    // Validar personal_info (debe existir para mostrar)
+    if (!data.personal_info || !data.personal_info.name) {
       return false;
     }
 

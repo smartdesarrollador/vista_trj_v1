@@ -110,9 +110,10 @@ export class PublicCardComponent implements OnInit {
   }
 
   private configureMetaTags(card: DigitalCard): void {
-    const name = card.personalInfo?.name || 'Tarjeta Digital';
-    const title = card.personalInfo?.title || '';
-    const description = card.about?.description || `Tarjeta digital de ${name}`;
+    const name = card.personal_info?.name || 'Tarjeta Digital';
+    const title = card.personal_info?.title || '';
+    const description =
+      card.about_info?.description || `Tarjeta digital de ${name}`;
     const pageTitle = title ? `${name} - ${title}` : name;
 
     // Usar una URL relativa para evitar problemas con SSR
@@ -130,10 +131,10 @@ export class PublicCardComponent implements OnInit {
     this.meta.updateTag({ property: 'og:type', content: 'profile' });
     this.meta.updateTag({ property: 'og:url', content: url });
 
-    if (card.personalInfo?.photo) {
+    if (card.personal_info?.photo) {
       this.meta.updateTag({
         property: 'og:image',
-        content: card.personalInfo.photo,
+        content: card.personal_info.photo,
       });
     }
 
@@ -144,10 +145,10 @@ export class PublicCardComponent implements OnInit {
     });
     this.meta.updateTag({ name: 'twitter:title', content: pageTitle });
     this.meta.updateTag({ name: 'twitter:description', content: description });
-    if (card.personalInfo?.photo) {
+    if (card.personal_info?.photo) {
       this.meta.updateTag({
         name: 'twitter:image',
-        content: card.personalInfo.photo,
+        content: card.personal_info.photo,
       });
     }
   }

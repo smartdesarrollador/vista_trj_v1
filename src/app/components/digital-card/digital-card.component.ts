@@ -129,16 +129,16 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    * Inicializar efectos cuánticos y holográficos
    */
   // Getters para acceder a los datos
-  get personalInfo() {
-    return this.displayData()?.personalInfo;
+  get personal_info() {
+    return this.displayData()?.personal_info;
   }
 
-  get contact() {
-    return this.displayData()?.contact;
+  get contact_info() {
+    return this.displayData()?.contact_info;
   }
 
-  get about() {
-    return this.displayData()?.about;
+  get about_info() {
+    return this.displayData()?.about_info;
   }
 
   private initializeQuantumEffects(): void {
@@ -481,7 +481,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   shareToWhatsApp(): void {
     const text = encodeURIComponent(
       `¡Mira mi tarjeta digital! ${
-        this.digitalCard?.personalInfo?.name || ''
+        this.digitalCard?.personal_info?.name || ''
       } - Especializado en desarrollo web moderno`
     );
     const url = encodeURIComponent(this.cardUrl);
@@ -512,7 +512,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   shareToTwitter(): void {
     const text = encodeURIComponent(
       `¡Mira mi tarjeta digital! ${
-        this.digitalCard?.personalInfo?.name || ''
+        this.digitalCard?.personal_info?.name || ''
       } - Especializado en desarrollo web moderno`
     );
     const url = encodeURIComponent(this.cardUrl);
@@ -530,7 +530,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   shareToLinkedIn(): void {
     const url = encodeURIComponent(this.cardUrl);
     const title = encodeURIComponent(
-      `Tarjeta Digital - ${this.digitalCard?.personalInfo?.name || ''}`
+      `Tarjeta Digital - ${this.digitalCard?.personal_info?.name || ''}`
     );
     const summary = encodeURIComponent(
       'Especializado en desarrollo web moderno. Conecta conmigo a través de mi tarjeta digital interactiva.'
