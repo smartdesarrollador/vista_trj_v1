@@ -1,37 +1,20 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  HostListener,
-  ElementRef,
-  Renderer2,
-  Inject,
-  PLATFORM_ID,
-  Input,
-  signal,
-  computed,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { DigitalCard } from '../../interfaces/digital-card.interface';
 import { DigitalCardService } from '../../services/digital-card.service';
 import { PerformanceService } from '../../core/performance/performance.service';
 import { DynamicQrComponent } from '../dynamic-qr/dynamic-qr.component';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-digital-card',
   standalone: true,
   imports: [CommonModule, DynamicQrComponent],
   templateUrl: './digital-card.component.html',
-  styleUrl: './digital-card.component.css',
+  styleUrl: './digital-card.component.css'
 })
 export class DigitalCardComponent implements OnInit, OnDestroy {
-  // Input para recibir datos externos
-  @Input() cardData: DigitalCard | null = null;
-  @Input() hideShareButtons = false;
 
-  // Propiedades existentes para compatibilidad
   digitalCard: DigitalCard | null = null;
   isLoading = true;
   error: string | null = null;
@@ -40,17 +23,12 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   private mouseY = 0;
   private isHovering = false;
   private rafId: number | null = null;
-
-  // Computed signal para unificar datos
-  readonly displayData = computed(() => {
-    return this.cardData || this.digitalCard;
-  });
-
+  
   // Share functionality properties
   showShareMenu = false;
   copyButtonText = 'Copiar enlace';
   private readonly cardUrl = 'https://tarjeta-jeans.smartdigitaltec.com';
-
+  
   private subscription: Subscription = new Subscription();
 
   constructor(
@@ -62,15 +40,8 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Solo cargar del servicio si no hay datos externos
-    if (!this.cardData) {
-      this.loadDigitalCard();
-    } else {
-      // Si hay datos externos, configurar directamente
-      this.isLoading = false;
-      this.error = null;
-    }
-
+    this.loadDigitalCard();
+    
     // Solo inicializar efectos cuánticos en el navegador con delay para mejorar performance
     if (isPlatformBrowser(this.platformId)) {
       // Verificar si se deben reducir las animaciones por performance
@@ -78,7 +49,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
         // En móvil o con preferencia de movimiento reducido, no inicializar efectos pesados
         return;
       }
-
+      
       // Delay la inicialización de efectos para priorizar la carga de contenido
       setTimeout(() => {
         this.initializeQuantumEffects();
@@ -100,28 +71,22 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.error = null;
 
-    const cardSubscription = this.digitalCardService
-      .getDigitalCardBySlug('jeans-malon-reyna')
-      .subscribe({
-        next: (data) => {
-          if (data && this.digitalCardService.validateDigitalCard(data)) {
-            this.digitalCard = data;
-            this.isLoading = false;
-          } else if (data === null) {
-            this.error =
-              'No se encontró tarjeta digital. Crea una nueva tarjeta para empezar.';
-            this.isLoading = false;
-          } else {
-            this.error = 'Datos de tarjeta digital inválidos';
-            this.isLoading = false;
-          }
-        },
-        error: (err) => {
-          this.error = 'Error al cargar los datos de la tarjeta digital';
+    const cardSubscription = this.digitalCardService.getDigitalCardData().subscribe({
+      next: (data) => {
+        if (this.digitalCardService.validateDigitalCard(data)) {
+          this.digitalCard = data;
           this.isLoading = false;
-          console.error('Error loading digital card:', err);
-        },
-      });
+        } else {
+          this.error = 'Datos de tarjeta digital inválidos';
+          this.isLoading = false;
+        }
+      },
+      error: (err) => {
+        this.error = 'Error al cargar los datos de la tarjeta digital';
+        this.isLoading = false;
+        console.error('Error loading digital card:', err);
+      }
+    });
 
     this.subscription.add(cardSubscription);
   }
@@ -129,37 +94,10 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   /**
    * Inicializar efectos cuánticos y holográficos
    */
-  // Getters para acceder a los datos
-  get personal_info() {
-    return this.displayData()?.personal_info;
-  }
-
-  get contact_info() {
-    return this.displayData()?.contact_info;
-  }
-
-  get about_info() {
-    return this.displayData()?.about_info;
-  }
-
-  get profileImageUrl(): string | null {
-    const photo = this.displayData()?.personal_info?.photo;
-    if (!photo) return null;
-    
-    // Si ya es una URL completa, devolverla tal como está
-    if (photo.startsWith('http://') || photo.startsWith('https://')) {
-      return photo;
-    }
-    
-    // Construir URL completa para imágenes locales usando environment
-    const baseUrl = environment.apiUrl.replace('/api', '');
-    return `${baseUrl}/${photo}`;
-  }
-
   private initializeQuantumEffects(): void {
     // Crear partículas magnéticas dinámicas
     this.createMagneticParticles();
-
+    
     // Inicializar seguimiento del cursor para efectos holográficos
     this.initializeCursorTracking();
   }
@@ -169,48 +107,28 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    */
   private createMagneticParticles(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-
+    
     // Reducir número de partículas para mejor performance
     setTimeout(() => {
-      const magneticField =
-        this.elementRef.nativeElement.querySelector('.magnetic-field');
+      const magneticField = this.elementRef.nativeElement.querySelector('.magnetic-field');
       if (magneticField) {
-        for (let i = 0; i < 4; i++) {
-          // Reducido de 8 a 4 partículas
+        for (let i = 0; i < 4; i++) { // Reducido de 8 a 4 partículas
           const particle = this.renderer.createElement('div');
           this.renderer.addClass(particle, 'magnetic-particle');
-
+          
           const colors = ['#00ffff', '#ff0080', '#8000ff', '#00ff80'];
           const color = colors[i % colors.length];
           const size = Math.random() * 3 + 2; // Tamaño ligeramente menor
-
+          
           this.renderer.setStyle(particle, 'width', `${size}px`);
           this.renderer.setStyle(particle, 'height', `${size}px`);
           this.renderer.setStyle(particle, 'background', color);
-          this.renderer.setStyle(
-            particle,
-            'box-shadow',
-            `0 0 ${size * 3}px ${color}`
-          ); // Menos blur
-          this.renderer.setStyle(
-            particle,
-            'top',
-            `${Math.random() * 80 + 10}%`
-          );
-          this.renderer.setStyle(
-            particle,
-            'left',
-            `${Math.random() * 80 + 10}%`
-          );
-          this.renderer.setStyle(
-            particle,
-            'animation',
-            `magneticField ${8 + Math.random() * 4}s ease-in-out infinite ${
-              Math.random() * 2
-            }s`
-          );
+          this.renderer.setStyle(particle, 'box-shadow', `0 0 ${size * 3}px ${color}`); // Menos blur
+          this.renderer.setStyle(particle, 'top', `${Math.random() * 80 + 10}%`);
+          this.renderer.setStyle(particle, 'left', `${Math.random() * 80 + 10}%`);
+          this.renderer.setStyle(particle, 'animation', `magneticField ${8 + Math.random() * 4}s ease-in-out infinite ${Math.random() * 2}s`);
           this.renderer.setStyle(particle, 'will-change', 'transform'); // Optimización GPU
-
+          
           this.renderer.appendChild(magneticField, particle);
         }
       }
@@ -222,14 +140,10 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    */
   private initializeCursorTracking(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-
-    this.renderer.listen(
-      this.elementRef.nativeElement,
-      'mousemove',
-      (e: MouseEvent) => {
-        this.updateMousePosition(e);
-      }
-    );
+    
+    this.renderer.listen(this.elementRef.nativeElement, 'mousemove', (e: MouseEvent) => {
+      this.updateMousePosition(e);
+    });
 
     this.renderer.listen(this.elementRef.nativeElement, 'mouseenter', () => {
       this.isHovering = true;
@@ -248,7 +162,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
     const rect = this.elementRef.nativeElement.getBoundingClientRect();
     this.mouseX = ((e.clientX - rect.left) / rect.width) * 100;
     this.mouseY = ((e.clientY - rect.top) / rect.height) * 100;
-
+    
     this.updateHolographicGlow();
   }
 
@@ -256,8 +170,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    * Actualizar brillo holográfico basado en la posición del cursor
    */
   private updateHolographicGlow(): void {
-    const cardElement =
-      this.elementRef.nativeElement.querySelector('.card-container');
+    const cardElement = this.elementRef.nativeElement.querySelector('.card-container');
     if (cardElement) {
       cardElement.style.setProperty('--mouse-x', `${this.mouseX}%`);
       cardElement.style.setProperty('--mouse-y', `${this.mouseY}%`);
@@ -269,7 +182,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    */
   private startQuantumAnimation(): void {
     if (!isPlatformBrowser(this.platformId) || this.rafId) return;
-
+    
     const animate = () => {
       if (this.isHovering) {
         this.updateQuantumField();
@@ -278,7 +191,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
         this.rafId = null;
       }
     };
-
+    
     this.rafId = requestAnimationFrame(animate);
   }
 
@@ -286,23 +199,16 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    * Actualizar campo cuántico de partículas
    */
   private updateQuantumField(): void {
-    const particles =
-      this.elementRef.nativeElement.querySelectorAll('.magnetic-particle');
+    const particles = this.elementRef.nativeElement.querySelectorAll('.magnetic-particle');
     particles.forEach((particle: HTMLElement, index: number) => {
-      const distance = this.calculateDistance(
-        particle,
-        this.mouseX,
-        this.mouseY
-      );
+      const distance = this.calculateDistance(particle, this.mouseX, this.mouseY);
       const attraction = Math.max(0, 1 - distance / 100);
-
+      
       if (attraction > 0.3) {
         const scale = 1 + attraction;
         const brightness = 1 + attraction * 0.5;
         particle.style.transform = `scale(${scale})`;
-        particle.style.filter = `brightness(${brightness}) blur(${
-          0.5 - attraction * 0.3
-        }px)`;
+        particle.style.filter = `brightness(${brightness}) blur(${0.5 - attraction * 0.3}px)`;
       }
     });
   }
@@ -310,18 +216,14 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   /**
    * Calcular distancia entre partícula y cursor
    */
-  private calculateDistance(
-    element: HTMLElement,
-    mouseX: number,
-    mouseY: number
-  ): number {
+  private calculateDistance(element: HTMLElement, mouseX: number, mouseY: number): number {
     const rect = element.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-
+    
     const deltaX = centerX - mouseX;
     const deltaY = centerY - mouseY;
-
+    
     return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
   }
 
@@ -330,11 +232,9 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    */
   onEdgeHover(edge: string): void {
     if (!isPlatformBrowser(this.platformId)) return;
-
+    
     this.currentEdge = edge;
-    const cardElement = this.elementRef.nativeElement.querySelector(
-      '.card-container'
-    ) as HTMLElement;
+    const cardElement = this.elementRef.nativeElement.querySelector('.card-container') as HTMLElement;
     if (cardElement) {
       cardElement.style.transformOrigin = this.getQuantumTransformOrigin(edge);
       this.applyQuantumEdgeEffect(cardElement, edge);
@@ -346,11 +246,9 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    */
   onEdgeLeave(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-
+    
     this.currentEdge = null;
-    const cardElement = this.elementRef.nativeElement.querySelector(
-      '.card-container'
-    ) as HTMLElement;
+    const cardElement = this.elementRef.nativeElement.querySelector('.card-container') as HTMLElement;
     if (cardElement) {
       cardElement.style.transformOrigin = 'center';
       cardElement.style.filter = '';
@@ -362,16 +260,11 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    */
   private getQuantumTransformOrigin(edge: string): string {
     switch (edge) {
-      case 'top':
-        return 'center top';
-      case 'bottom':
-        return 'center bottom';
-      case 'left':
-        return 'left center';
-      case 'right':
-        return 'right center';
-      default:
-        return 'center';
+      case 'top': return 'center top';
+      case 'bottom': return 'center bottom';
+      case 'left': return 'left center';
+      case 'right': return 'right center';
+      default: return 'center';
     }
   }
 
@@ -383,11 +276,10 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
       top: 'hue-rotate(90deg) brightness(1.2) saturate(1.3)',
       bottom: 'hue-rotate(-90deg) brightness(1.1) saturate(1.2)',
       left: 'hue-rotate(180deg) brightness(1.3) saturate(1.4)',
-      right: 'hue-rotate(270deg) brightness(1.1) saturate(1.1)',
+      right: 'hue-rotate(270deg) brightness(1.1) saturate(1.1)'
     };
-
-    element.style.filter =
-      quantumEffects[edge as keyof typeof quantumEffects] || '';
+    
+    element.style.filter = quantumEffects[edge as keyof typeof quantumEffects] || '';
   }
 
   /**
@@ -396,7 +288,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
     if (!isPlatformBrowser(this.platformId)) return;
-
+    
     // Efectos especiales con teclas
     if (event.key === ' ') {
       this.triggerQuantumBurst();
@@ -408,14 +300,12 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    */
   private triggerQuantumBurst(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-
-    const cardElement =
-      this.elementRef.nativeElement.querySelector('.card-container');
+    
+    const cardElement = this.elementRef.nativeElement.querySelector('.card-container');
     if (cardElement) {
       cardElement.style.animation = 'none';
       setTimeout(() => {
-        cardElement.style.animation =
-          'holographicEntry 0.8s ease-out, liquidFloat 2s ease-in-out infinite 0.8s';
+        cardElement.style.animation = 'holographicEntry 0.8s ease-out, liquidFloat 2s ease-in-out infinite 0.8s';
       }, 50);
     }
   }
@@ -427,7 +317,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
     if (!name) return '??';
     return name
       .split(' ')
-      .map((word) => word.charAt(0).toUpperCase())
+      .map(word => word.charAt(0).toUpperCase())
       .slice(0, 2)
       .join('');
   }
@@ -435,7 +325,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   /**
    * Formatear número de teléfono para mejor visualización
    */
-  formatPhone(phone?: string | null): string {
+  formatPhone(phone?: string): string {
     if (!phone) return '';
     // Ejemplo: +34 600 123 456 -> +34 600 123 456
     return phone.replace(/(\+\d{2})(\d{3})(\d{3})(\d{3})/, '$1 $2 $3 $4');
@@ -444,7 +334,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   /**
    * Obtener dominio del email para mostrar
    */
-  getEmailDomain(email?: string | null): string {
+  getEmailDomain(email?: string): string {
     if (!email) return '';
     return email.split('@')[1] || '';
   }
@@ -460,7 +350,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   /**
    * Limpiar número de teléfono para WhatsApp
    */
-  getCleanPhone(phone?: string | null): string {
+  getCleanPhone(phone?: string): string {
     if (!phone) return '';
     return phone.replace(/[^0-9]/g, '');
   }
@@ -494,14 +384,10 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    * Share to WhatsApp
    */
   shareToWhatsApp(): void {
-    const text = encodeURIComponent(
-      `¡Mira mi tarjeta digital! ${
-        this.digitalCard?.personal_info?.name || ''
-      } - Especializado en desarrollo web moderno`
-    );
+    const text = encodeURIComponent(`¡Mira mi tarjeta digital! ${this.digitalCard?.personalInfo?.name || ''} - Especializado en desarrollo web moderno`);
     const url = encodeURIComponent(this.cardUrl);
     const whatsappUrl = `https://wa.me/?text=${text}%20${url}`;
-
+    
     if (isPlatformBrowser(this.platformId)) {
       window.open(whatsappUrl, '_blank', 'width=600,height=400');
     }
@@ -514,7 +400,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   shareToFacebook(): void {
     const url = encodeURIComponent(this.cardUrl);
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-
+    
     if (isPlatformBrowser(this.platformId)) {
       window.open(facebookUrl, '_blank', 'width=600,height=400');
     }
@@ -525,14 +411,10 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    * Share to Twitter
    */
   shareToTwitter(): void {
-    const text = encodeURIComponent(
-      `¡Mira mi tarjeta digital! ${
-        this.digitalCard?.personal_info?.name || ''
-      } - Especializado en desarrollo web moderno`
-    );
+    const text = encodeURIComponent(`¡Mira mi tarjeta digital! ${this.digitalCard?.personalInfo?.name || ''} - Especializado en desarrollo web moderno`);
     const url = encodeURIComponent(this.cardUrl);
     const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-
+    
     if (isPlatformBrowser(this.platformId)) {
       window.open(twitterUrl, '_blank', 'width=600,height=400');
     }
@@ -544,14 +426,10 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
    */
   shareToLinkedIn(): void {
     const url = encodeURIComponent(this.cardUrl);
-    const title = encodeURIComponent(
-      `Tarjeta Digital - ${this.digitalCard?.personal_info?.name || ''}`
-    );
-    const summary = encodeURIComponent(
-      'Especializado en desarrollo web moderno. Conecta conmigo a través de mi tarjeta digital interactiva.'
-    );
+    const title = encodeURIComponent(`Tarjeta Digital - ${this.digitalCard?.personalInfo?.name || ''}`);
+    const summary = encodeURIComponent('Especializado en desarrollo web moderno. Conecta conmigo a través de mi tarjeta digital interactiva.');
     const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${title}&summary=${summary}`;
-
+    
     if (isPlatformBrowser(this.platformId)) {
       window.open(linkedinUrl, '_blank', 'width=600,height=400');
     }
@@ -580,12 +458,13 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
         document.execCommand('copy');
         textArea.remove();
       }
-
+      
       // Cambiar texto del botón temporalmente
       this.copyButtonText = '¡Copiado!';
       setTimeout(() => {
         this.copyButtonText = 'Copiar enlace';
       }, 2000);
+      
     } catch (err) {
       console.error('Error copying to clipboard:', err);
       this.copyButtonText = 'Error al copiar';
@@ -593,7 +472,8 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
         this.copyButtonText = 'Copiar enlace';
       }, 2000);
     }
-
+    
     this.showShareMenu = false;
   }
+
 }

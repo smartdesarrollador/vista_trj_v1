@@ -1,24 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/guards/auth.guard';
 export const routes: Routes = [
-  // Ruta por defecto
-  {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'tarjeta/jeans-malon-reyna',
-  },
-
-  // Ruta pública para tarjetas digitales
-  {
-    path: 'tarjeta/:slug',
-    loadComponent: () =>
-      import('./pages/public-card/public-card.component').then(
-        (m) => m.PublicCardComponent
-      ),
-    title: 'Tarjeta Digital',
-  },
-
-  // Rutas de autenticación
   {
     path: 'auth',
     children: [
@@ -32,6 +14,7 @@ export const routes: Routes = [
       },
       {
         path: 'register',
+        //canActivate: [authGuard],
         loadComponent: () =>
           import('./paginas/auth/register/register.component').then(
             (m) => m.RegisterComponent
@@ -59,10 +42,13 @@ export const routes: Routes = [
         redirectTo: 'login',
         pathMatch: 'full',
       },
+      /* {
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full',
+      }, */
     ],
   },
-
-  // Vista principal (requiere autenticación)
   {
     path: '',
     loadComponent: () =>
@@ -93,16 +79,14 @@ export const routes: Routes = [
           ),
         title: 'Mi Cuenta - Tarjeta Digital',
       },
+      {
+        path: '**',
+        loadComponent: () =>
+          import('./paginas/page-not-found/page-not-found.component').then(
+            (m) => m.PageNotFoundComponent
+          ),
+        title: 'Página no encontrada',
+      },
     ],
-  },
-
-  // Ruta 404 - debe ser la última
-  {
-    path: '**',
-    loadComponent: () =>
-      import('./pages/not-found/not-found.component').then(
-        (m) => m.NotFoundComponent
-      ),
-    title: 'Página no encontrada',
   },
 ];
