@@ -207,8 +207,8 @@
 
       <!-- 2. Portafolio (Website) -->
       <a
-        *ngIf="digitalCard?.contact_info?.website"
-        [href]="digitalCard?.contact_info?.website"
+        *ngIf="contact_info?.website"
+        [href]="contact_info?.website"
         target="_blank"
         rel="noopener noreferrer"
         class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors contact-link group"
@@ -238,8 +238,8 @@
 
       <!-- 3. Facebook -->
       <a
-        *ngIf="digitalCard?.contact_info?.facebook"
-        [href]="digitalCard?.contact_info?.facebook"
+        *ngIf="contact_info?.facebook"
+        [href]="contact_info?.facebook"
         target="_blank"
         rel="noopener noreferrer"
         class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors contact-link group"
@@ -267,7 +267,8 @@
 
       <!-- 4. Email -->
       <a
-        [href]="'mailto:' + digitalCard?.contact_info?.email"
+        *ngIf="contact_info?.email"
+        [href]="'mailto:' + contact_info?.email"
         class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors contact-link group"
       >
         <div class="flex-shrink-0">
@@ -288,17 +289,18 @@
           <p
             class="text-sm font-medium text-cyan-100 group-hover:text-cyan-300"
           >
-            {{ digitalCard?.contact_info?.email }}
+            {{ contact_info?.email }}
           </p>
           <p class="text-xs text-gray-400">
-            {{ getEmailDomain(digitalCard?.contact_info?.email) }}
+            {{ getEmailDomain(contact_info?.email) }}
           </p>
         </div>
       </a>
 
       <!-- 5. Phone -->
       <a
-        [href]="'tel:' + digitalCard?.contact_info?.phone"
+        *ngIf="contact_info?.phone"
+        [href]="'tel:' + contact_info?.phone"
         class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors contact-link group"
       >
         <div class="flex-shrink-0">
@@ -316,7 +318,7 @@
           <p
             class="text-sm font-medium text-cyan-100 group-hover:text-cyan-300"
           >
-            {{ formatPhone(digitalCard?.contact_info?.phone) }}
+            {{ formatPhone(contact_info?.phone) }}
           </p>
           <p class="text-xs text-gray-400">Llamar o WhatsApp</p>
         </div>
@@ -324,8 +326,8 @@
 
       <!-- LinkedIn -->
       <a
-        *ngIf="digitalCard?.contact_info?.linkedin"
-        [href]="digitalCard?.contact_info?.linkedin"
+        *ngIf="contact_info?.linkedin"
+        [href]="contact_info?.linkedin"
         target="_blank"
         rel="noopener noreferrer"
         class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors contact-link group"
@@ -353,8 +355,8 @@
 
       <!-- Twitter -->
       <a
-        *ngIf="digitalCard?.contact_info?.twitter"
-        [href]="digitalCard?.contact_info?.twitter"
+        *ngIf="contact_info?.twitter"
+        [href]="contact_info?.twitter"
         target="_blank"
         rel="noopener noreferrer"
         class="flex items-center p-3 bg-sky-50 rounded-lg hover:bg-sky-100 hover:text-sky-700 transition-colors contact-link group"
@@ -380,8 +382,8 @@
 
       <!-- Instagram -->
       <a
-        *ngIf="digitalCard?.contact_info?.instagram"
-        [href]="digitalCard?.contact_info?.instagram"
+        *ngIf="contact_info?.instagram"
+        [href]="contact_info?.instagram"
         target="_blank"
         rel="noopener noreferrer"
         class="flex items-center p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg hover:from-purple-100 hover:to-pink-100 transition-colors contact-link group"
@@ -409,8 +411,8 @@
 
       <!-- GitHub -->
       <a
-        *ngIf="digitalCard?.contact_info?.github"
-        [href]="digitalCard?.contact_info?.github"
+        *ngIf="contact_info?.github"
+        [href]="contact_info?.github"
         target="_blank"
         rel="noopener noreferrer"
         class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors contact-link group"
@@ -438,8 +440,8 @@
 
       <!-- YouTube -->
       <a
-        *ngIf="digitalCard?.contact_info?.youtube"
-        [href]="digitalCard?.contact_info?.youtube"
+        *ngIf="contact_info?.youtube"
+        [href]="contact_info?.youtube"
         target="_blank"
         rel="noopener noreferrer"
         class="flex items-center p-3 bg-red-50 rounded-lg hover:bg-red-100 hover:text-red-700 transition-colors contact-link group"
@@ -465,8 +467,8 @@
 
       <!-- TikTok -->
       <a
-        *ngIf="digitalCard?.contact_info?.tiktok"
-        [href]="digitalCard?.contact_info?.tiktok"
+        *ngIf="contact_info?.tiktok"
+        [href]="contact_info?.tiktok"
         target="_blank"
         rel="noopener noreferrer"
         class="flex items-center p-3 bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors contact-link group"
@@ -663,7 +665,7 @@
         <div class="xl:col-span-2 mb-6 xl:mb-0 relative z-10">
           <h3 class="text-sm font-semibold text-cyan-300 mb-3">Acerca de mí</h3>
           <p class="text-gray-300 text-sm leading-relaxed mb-4">
-            {{ digitalCard?.about_info?.description }}
+            {{ about_info?.description }}
           </p>
 
           <!-- Skills -->
@@ -673,7 +675,7 @@
             </h4>
             <div class="flex flex-wrap gap-2">
               <span
-                *ngFor="let skill of digitalCard?.about_info?.skills"
+                *ngFor="let skill of about_info?.skills"
                 class="inline-flex items-center px-3 py-1 text-sm rounded-full font-medium skill-tag"
               >
                 <svg
@@ -710,7 +712,7 @@
               </svg>
               <div class="text-center">
                 <div class="text-3xl font-bold text-cyan-300">
-                  {{ digitalCard?.about_info?.experience }}+
+                  {{ about_info?.experience }}+
                 </div>
                 <div class="text-cyan-400 text-xs">años de experiencia</div>
               </div>
